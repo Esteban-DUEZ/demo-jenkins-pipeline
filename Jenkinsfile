@@ -8,20 +8,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                script {
-                    docker.image('maven:3.8.6-openjdk-17').inside('-v $HOME/.m2:/root/.m2') {
-                        sh 'mvn clean compile'
-                    }
-                }
+                sh 'mvn clean compile'
             }
         }
         stage('Test') {
             steps {
-                script {
-                    docker.image('maven:3.8.6-openjdk-17').inside('-v $HOME/.m2:/root/.m2') {
-                        sh 'mvn test'
-                    }
-                }
+                sh 'mvn test'
             }
             post {
                 always {
