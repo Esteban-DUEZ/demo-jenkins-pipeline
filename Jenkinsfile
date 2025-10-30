@@ -1,36 +1,42 @@
 pipeline {
-    agent any
+    agent any 
+
     tools {
-        maven 'install' 
+        maven 'install'
     }
+
     stages {
-        stage('Checkout') {
+        stage('Cloner le dépôt') {
             steps {
+                echo 'Clonage du dépot'
                 checkout scm
             }
         }
-        stage('Build') {
+        stage('Compiler le projet') {
             steps {
+                echo 'Compilation du projet'
                 sh 'mvn clean compile'
             }
         }
-        stage('Test') {
+        stage('Exécuter les tests') {
             steps {
+                echo 'Exécution des tests'
                 sh 'mvn test'
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
+        }
+        stage('Publier les résultats') {
+            steps {
+                echo 'Publication des rapports de tests'
+                junit '*/target/surefire-reports/.xml'
             }
         }
     }
     post {
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Build réussi !'
         }
         failure {
-            echo 'Pipeline failed.'
+            echo 'Build échoué.'
         }
     }
 }
